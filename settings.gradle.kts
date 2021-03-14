@@ -77,6 +77,7 @@ var addOns = listOf(
     "soap",
     "spiderAjax",
     "sqliplugin",
+    "sqlmap",
     "sse",
     "svndigger",
     "tips",
