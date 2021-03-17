@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.zaproxy.zap.extension.simpleexample;
+package org.zaproxy.zap.extension.sqlmap;
 
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
@@ -30,13 +30,13 @@ import org.zaproxy.zap.extension.api.ApiResponseElement;
 public class SimpleExampleAPI extends ApiImplementor {
     private static final String PREFIX = "simpleExample";
 
-    private ExtensionSqlMap extension;
+    private ExtensionSimpleExample extension;
 
     private static final String ACTION_HELLO_WORLD = "helloWorld";
 
     private static final Logger LOGGER = Logger.getLogger(SimpleExampleAPI.class);
 
-    public SimpleExampleAPI(ExtensionSqlMap extension) {
+    public SimpleExampleAPI(ExtensionSimpleExample extension) {
         this.extension = extension;
         this.addApiAction(new ApiAction(ACTION_HELLO_WORLD));
     }

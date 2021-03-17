@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.zaproxy.zap.extension.simpleexample;
+package org.zaproxy.zap.extension.sqlmap;
 
 import java.awt.CardLayout;
 import java.awt.Font;
@@ -64,7 +64,7 @@ public class ExtensionSqlMap extends ExtensionAdaptor {
     private static final String EXAMPLE_FILE = "example/ExampleFile.txt";
 
     private ZapMenuItem menuSqlmap;
-    private RightClickMsgMenu popupMsgMenuExample;
+    private RightClickMsgMenu popupMsgMenuSQLMap;
     private AbstractPanel statusPanel;
     private SqlmapDialog sqlmapDialog;
 
@@ -87,8 +87,8 @@ public class ExtensionSqlMap extends ExtensionAdaptor {
         // As long as we're not running as a daemon
         if (getView() != null) {
             extensionHook.getHookMenu().addToolsMenuItem(getMenuSqlmap());
-            extensionHook.getHookMenu().addPopupMenuItem(getPopupMsgMenuExample());
-            extensionHook.getHookView().addStatusPanel(getStatusPanel());
+            extensionHook.getHookMenu().addPopupMenuItem(getPopupMsgMenuSQLMap());
+            //            extensionHook.getHookView().addStatusPanel(getStatusPanel());
         }
     }
 
@@ -168,13 +168,18 @@ public class ExtensionSqlMap extends ExtensionAdaptor {
         }
     }
 
-    private RightClickMsgMenu getPopupMsgMenuExample() {
-        if (popupMsgMenuExample == null) {
-            popupMsgMenuExample =
+    private RightClickMsgMenu getPopupMsgMenuSQLMap() {
+        if (popupMsgMenuSQLMap == null) {
+            popupMsgMenuSQLMap =
                     new RightClickMsgMenu(
                             this, Constant.messages.getString(PREFIX + ".popup.title"));
+            popupMsgMenuSQLMap.addActionListener(
+                    e -> {
+                        getSqlmapDialog().init();
+                        getSqlmapDialog().setVisible(true);
+                    });
         }
-        return popupMsgMenuExample;
+        return popupMsgMenuSQLMap;
     }
 
     private SqlmapDialog getSqlmapDialog() {
