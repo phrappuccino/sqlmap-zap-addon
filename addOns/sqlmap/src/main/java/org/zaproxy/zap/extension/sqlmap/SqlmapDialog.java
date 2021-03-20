@@ -21,6 +21,8 @@ package org.zaproxy.zap.extension.sqlmap;
 
 import java.awt.*;
 import javax.swing.*;
+
+import org.parosproxy.paros.network.HttpMessage;
 import org.zaproxy.zap.model.Context;
 import org.zaproxy.zap.utils.DisplayUtils;
 import org.zaproxy.zap.view.StandardFieldsDialog;
@@ -117,7 +119,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
         reset(true);
     }
 
-    public void init() {
+    public void init(HttpMessage httpMessage) {
         this.removeAllFields();
         this.contextsModel = null;
         this.sitesModel = null;
@@ -125,9 +127,13 @@ public class SqlmapDialog extends StandardFieldsDialog {
         this.sitesSelector = null;
 
         this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_APIIPPORT, "127.0.0.1:8081");
-        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETURL, "");
-        this.addMultilineField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETPOSTDATA, "");
-        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETCOOKIES, "");
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETURL, httpMessage.getRequestHeader().getURI().toString());
+        this.addMultilineField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETPOSTDATA, httpMessage.getRequestBody().toString());
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETCOOKIES, httpMessage.getCookieParamsAsString());
+        addRemainingFields();
+    }
+
+    private void addRemainingFields() {
         this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
 
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "3");
@@ -152,6 +158,20 @@ public class SqlmapDialog extends StandardFieldsDialog {
 
         this.addPadding(TAB_OPTIONS);
         this.pack();
+    }
+
+    public void init() {
+        this.removeAllFields();
+        this.contextsModel = null;
+        this.sitesModel = null;
+        this.contextsSelector = null;
+        this.sitesSelector = null;
+
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_APIIPPORT, "127.0.0.1:8081");
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETURL, "");
+        this.addMultilineField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETPOSTDATA, "");
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETCOOKIES, "");
+        addRemainingFields();
     }
 
     @Override

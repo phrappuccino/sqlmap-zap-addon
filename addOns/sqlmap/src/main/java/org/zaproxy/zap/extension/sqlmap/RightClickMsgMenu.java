@@ -25,6 +25,8 @@ import org.parosproxy.paros.view.View;
 import org.zaproxy.zap.view.messagecontainer.http.HttpMessageContainer;
 import org.zaproxy.zap.view.popup.PopupMenuItemHttpMessageContainer;
 
+import java.awt.*;
+
 /**
  * A pop up menu item shown in components that contain HTTP messages, it shows an internationalised
  * message with the request-uri of the HTTP message.
@@ -35,10 +37,13 @@ public class RightClickMsgMenu extends PopupMenuItemHttpMessageContainer {
 
     private static final long serialVersionUID = 1L;
 
+    private SqlmapDialog sqlmapDialog;
+
+
     @SuppressWarnings("unused")
     private ExtensionSqlMap extension;
 
-    public RightClickMsgMenu(ExtensionSqlMap ext, String label) {
+    public RightClickMsgMenu(ExtensionSqlMap ext, String label, Frame owner) {
         super(label);
         /*
          * This is how you can pass in your extension, which you may well need to use
@@ -51,11 +56,13 @@ public class RightClickMsgMenu extends PopupMenuItemHttpMessageContainer {
     public void performAction(HttpMessage msg) {
         // This is where you do what you want to do.
         // In this case we'll just show a popup message.
-        View.getSingleton()
-                .showMessageDialog(
-                        Constant.messages.getString(
-                                ExtensionSqlMap.PREFIX + ".popup.msg",
-                                msg.getRequestHeader().getURI().toString()));
+        getSqlmapDialog().init(msg);
+        getSqlmapDialog().setVisible(true);
+//        View.getSingleton()
+//                .showMessageDialog(
+//                        Constant.messages.getString(
+//                                ExtensionSqlMap.PREFIX + ".popup.msg",
+//                                msg.getRequestHeader().getURI().toString()));
     }
 
     @Override
@@ -71,5 +78,12 @@ public class RightClickMsgMenu extends PopupMenuItemHttpMessageContainer {
         // The action of menu item does not do any (potentially) unsafe operation, like starting a
         // scan against a target.
         return true;
+    }
+
+    private SqlmapDialog getSqlmapDialog() {
+        if (sqlmapDialog == null) {
+            sqlmapDialog = new SqlmapDialog(this.extension, View.getSingleton().getMainFrame());
+        }
+        return sqlmapDialog;
     }
 }
