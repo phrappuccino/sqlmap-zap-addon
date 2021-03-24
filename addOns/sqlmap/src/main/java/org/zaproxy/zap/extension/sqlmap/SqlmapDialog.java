@@ -22,7 +22,9 @@ package org.zaproxy.zap.extension.sqlmap;
 import java.awt.*;
 import javax.swing.*;
 
+import org.parosproxy.paros.Constant;
 import org.parosproxy.paros.network.HttpMessage;
+import org.parosproxy.paros.view.View;
 import org.zaproxy.zap.model.Context;
 import org.zaproxy.zap.utils.DisplayUtils;
 import org.zaproxy.zap.view.StandardFieldsDialog;
@@ -55,10 +57,11 @@ public class SqlmapDialog extends StandardFieldsDialog {
     private static final String FIELD_SQLMAP_NAME_APIIPPORT = "sqlmap.dialog.field.api-ip-port";
     private static final String FIELD_SQLMAP_NAME_DBMSBACKEND = "sqlmap.dialog.field.dbmsbackend";
     private static final String FIELD_SQLMAP_NAME_OS = "sqlmap.dialog.field.os";
+    private static final String FIELD_SQLMAP_NAME_TESTPARAMETERS = "sqlmap.dialog.field.testparams";
 
     private static final String[] TAB_LABELS = {"sqlmap.dialog.tab.options"};
     private static final String[] LEVEL_CHOICES = {"1", "2", "3", "4", "5"};
-    private static final String[] RISK_CHOICES = {"0", "1", "2", "3"};
+    private static final String[] RISK_CHOICES = {"1", "2", "3"};
     private static final String[] THREADS_CHOICES = {
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
     };
@@ -112,9 +115,10 @@ public class SqlmapDialog extends StandardFieldsDialog {
     private DefaultListModel<String> sitesModel;
     private JList<Context> contextsSelector;
     private JList<String> sitesSelector;
+    private communicationToAPI communicationToAPI1;
 
     public SqlmapDialog(ExtensionSqlMap ext, Frame owner) {
-        super(owner, "sqlmap.dialog.title", DisplayUtils.getScaledDimension(600, 750), TAB_LABELS);
+        super(owner, "sqlmap.dialog.title", DisplayUtils.getScaledDimension(600, 800), TAB_LABELS);
         this.extension = ext;
         reset(true);
     }
@@ -134,9 +138,10 @@ public class SqlmapDialog extends StandardFieldsDialog {
     }
 
     private void addRemainingFields() {
-        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
+//        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TESTPARAMETERS, "");
 
-        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "3");
+        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "1");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RISK, RISK_CHOICES, "1");
 
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_PARAMPOLLUTION, false);
@@ -150,7 +155,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTROLES, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTPRIVS, false);
 
-        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_THREADS, THREADS_CHOICES, "1");
+        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_THREADS, THREADS_CHOICES, "5");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RETRIES, RETRIES_CHOICES, "3");
 
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_DBMSBACKEND, DBMS_BACKEND_CHOICES, "Any");
@@ -184,8 +189,29 @@ public class SqlmapDialog extends StandardFieldsDialog {
 
     private void reset(boolean refreshUi) {
         if (refreshUi) {
-            init();
-            repaint();
+            String string = "Hello";
+            int returncode = 2;
+
+            communicationToAPI1 = new communicationToAPI(string);
+            communicationToAPI1.sendReq();
+//            communicationToAPI commu = null;
+//            returncode = commu.sendReq();
+//            init();
+//            repaint();
         }
+    }
+
+    @Override
+    public JButton[] getExtraButtons() {
+        if (extraButtons == null) {
+            JButton startButton =
+                    new JButton(Constant.messages.getString("sqlmap.dialog.button.start"));
+            startButton.addActionListener(
+                    e -> reset(true));
+
+            extraButtons = new JButton[] {startButton};
+        }
+
+        return extraButtons;
     }
 }
