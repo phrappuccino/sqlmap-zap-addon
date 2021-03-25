@@ -19,13 +19,11 @@
  */
 package org.zaproxy.zap.extension.sqlmap;
 
-import org.parosproxy.paros.Constant;
+import java.awt.*;
 import org.parosproxy.paros.network.HttpMessage;
 import org.parosproxy.paros.view.View;
 import org.zaproxy.zap.view.messagecontainer.http.HttpMessageContainer;
 import org.zaproxy.zap.view.popup.PopupMenuItemHttpMessageContainer;
-
-import java.awt.*;
 
 /**
  * A pop up menu item shown in components that contain HTTP messages, it shows an internationalised
@@ -38,7 +36,6 @@ public class RightClickMsgMenu extends PopupMenuItemHttpMessageContainer {
     private static final long serialVersionUID = 1L;
 
     private SqlmapDialog sqlmapDialog;
-
 
     @SuppressWarnings("unused")
     private ExtensionSqlMap extension;
@@ -58,11 +55,11 @@ public class RightClickMsgMenu extends PopupMenuItemHttpMessageContainer {
         // In this case we'll just show a popup message.
         getSqlmapDialog().init(msg);
         getSqlmapDialog().setVisible(true);
-//        View.getSingleton()
-//                .showMessageDialog(
-//                        Constant.messages.getString(
-//                                ExtensionSqlMap.PREFIX + ".popup.msg",
-//                                msg.getRequestHeader().getURI().toString()));
+        //        View.getSingleton()
+        //                .showMessageDialog(
+        //                        Constant.messages.getString(
+        //                                ExtensionSqlMap.PREFIX + ".popup.msg",
+        //                                msg.getRequestHeader().getURI().toString()));
     }
 
     @Override

@@ -21,10 +21,8 @@ package org.zaproxy.zap.extension.sqlmap;
 
 import java.awt.*;
 import javax.swing.*;
-
 import org.parosproxy.paros.Constant;
 import org.parosproxy.paros.network.HttpMessage;
-import org.parosproxy.paros.view.View;
 import org.zaproxy.zap.model.Context;
 import org.zaproxy.zap.utils.DisplayUtils;
 import org.zaproxy.zap.view.StandardFieldsDialog;
@@ -131,14 +129,23 @@ public class SqlmapDialog extends StandardFieldsDialog {
         this.sitesSelector = null;
 
         this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_APIIPPORT, "127.0.0.1:8081");
-        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETURL, httpMessage.getRequestHeader().getURI().toString());
-        this.addMultilineField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETPOSTDATA, httpMessage.getRequestBody().toString());
-        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TARGETCOOKIES, httpMessage.getCookieParamsAsString());
+        this.addTextField(
+                TAB_OPTIONS,
+                FIELD_SQLMAP_NAME_TARGETURL,
+                httpMessage.getRequestHeader().getURI().toString());
+        this.addMultilineField(
+                TAB_OPTIONS,
+                FIELD_SQLMAP_NAME_TARGETPOSTDATA,
+                httpMessage.getRequestBody().toString());
+        this.addTextField(
+                TAB_OPTIONS,
+                FIELD_SQLMAP_NAME_TARGETCOOKIES,
+                httpMessage.getCookieParamsAsString());
         addRemainingFields();
     }
 
     private void addRemainingFields() {
-//        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
+        //        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
         this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TESTPARAMETERS, "");
 
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "1");
@@ -191,13 +198,30 @@ public class SqlmapDialog extends StandardFieldsDialog {
         if (refreshUi) {
             String string = "Hello";
             int returncode = 2;
-
+            // sqliopts = {'authType': authtype, 'csrfUrl': csrfurl, 'csrfToken': csrftoken,
+            // 'getUsers': lusersstatus, 'getPasswordHashes': lpswdsstatus, 'delay':
+            // self._jComboDelay.getSelectedItem(), 'isDba': isdbastatus, 'risk':
+            // self._jComboRisk.getSelectedItem(), 'getCurrentUser': custatus, 'getRoles':
+            // lrolesstatus, 'getPrivileges': lprivsstatus, 'testParameter': paramdata, 'timeout':
+            // self._jComboTimeout.getSelectedItem(), 'ignoreCode': ignorecodedata, 'torPort':
+            // torport, 'level': self._jComboLevel.getSelectedItem(), 'getCurrentDb': cdbstatus,
+            // 'answers': 'crack=N,dict=N,continue=Y,quit=N', 'method': httpmethod, 'cookie':
+            // cookiedata, 'proxy': proxy, 'os': os, 'threads':
+            // self._jComboThreads.getSelectedItem(), 'url': self._jTextFieldURL.getText(),
+            // 'getDbs': ldbsstatus, 'tor': torstatus, 'torType': tortype, 'referer': refererdata,
+            // 'retries': self._jComboRetry.getSelectedItem(), 'headers': custheaderdata,
+            // 'authCred': authcred, 'timeSec': self._jComboTimeSec.getSelectedItem(),
+            // 'getHostname': hostnamestatus, 'agent': uadata, 'dbms': dbms, 'tamper': tamperdata,
+            // 'hpp': hppstatus, 'getBanner': 'true', 'data': postdata, 'textOnly': textonlystatus}
+            String jsonInputString = "{'authType': null, }";
+            // {    "taskid": "e8540cc7c36f3c65",     "success": true}
             communicationToAPI1 = new communicationToAPI(string);
-            communicationToAPI1.sendReq();
-//            communicationToAPI commu = null;
-//            returncode = commu.sendReq();
-//            init();
-//            repaint();
+            communicationToAPI1.startScanAPI();
+            jsonObjectResponse optionsObject = new jsonObjectResponse();
+            //            communicationToAPI commu = null;
+            //            returncode = commu.sendReq();
+            //            init();
+            //            repaint();
         }
     }
 
@@ -206,8 +230,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
         if (extraButtons == null) {
             JButton startButton =
                     new JButton(Constant.messages.getString("sqlmap.dialog.button.start"));
-            startButton.addActionListener(
-                    e -> reset(true));
+            startButton.addActionListener(e -> reset(true));
 
             extraButtons = new JButton[] {startButton};
         }
