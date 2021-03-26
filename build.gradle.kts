@@ -30,7 +30,7 @@ allprojects {
 
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "utf-8"
-        options.compilerArgs = listOf("-Xlint:all", "-Xlint:-path", "-Xlint:-options", "-Werror")
+        options.compilerArgs = listOf("-Xlint:all", "-Xlint:-path", "-Xlint:-options")//, "-Werror")
     }
 
     tasks.withType<Test>().configureEach {
