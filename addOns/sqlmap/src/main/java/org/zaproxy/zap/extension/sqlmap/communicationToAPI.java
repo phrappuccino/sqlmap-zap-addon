@@ -31,13 +31,12 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.parosproxy.paros.view.View;
+import org.parosproxy.paros.Constant;
 
 public class communicationToAPI {
-    String sqlmapcommand;
     jsonObjectResponse optionsObject;
 
-    public communicationToAPI(String string, jsonObjectResponse optionsObject) {
-        this.sqlmapcommand = string;
+    public communicationToAPI(jsonObjectResponse optionsObject) {
         this.optionsObject = optionsObject;
     }
 
@@ -45,14 +44,23 @@ public class communicationToAPI {
         String taskIDfromcreate = createTask("GET", "http://" + urlPort);
         setOptionsOnAPI("POST", "http://" + urlPort, taskIDfromcreate);
         startScanOnAPI("POST", "http://" + urlPort, taskIDfromcreate);
-        boolean statusFlag = true;
-//        while (statusFlag){
-//            String statusFromF = getStatusFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
-//            if (statusFromF.equals("terminated")){
-//                statusFlag = false;
-//            }
-//            try {TimeUnit.SECONDS.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
-//        }
+        try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException e) {e.printStackTrace();}
+        while (true){
+            String statusFromF = getStatusFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
+            int i = 0;
+            i++;
+            if (i > 15){
+                break;
+            }
+            if (statusFromF.equals("terminated")){
+                View.getSingleton()
+                        .getOutputPanel()
+                        .append("getting data after scan" + "\n");
+                getDataFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
+                break;
+            }
+            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException e) {e.printStackTrace();}
+        }
     }
 
     public String createTask(String method, String URL) {
@@ -402,11 +410,111 @@ public class communicationToAPI {
 
             View.getSingleton()
                     .getOutputPanel()
-                    .append("status is: " + response1.getStatus() + "\n");
+                    .append("inside get status is: " + response1.getStatus() + "\n");
         } else {
             View.getSingleton().getOutputPanel().append("GET request not worked\n");
         }
         return response1.getStatus();
+    }
+
+    public void getDataFromAPI(String method, String URL, String passedTaskID) {
+        URL obj = null;
+//        idsuccessResponse response1 = new idsuccessResponse();
+        try {
+            obj = new URL(URL + "/scan/" + passedTaskID + "/data"); // ip:Port/scan/ID/status       ip:Port/scan/ID/data
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            View.getSingleton().getOutputPanel().append("cought malformed url");
+        }
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) obj.openConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            // Hier auf POST oder jeweilige HTTP-Methode wechseln die benötigt wird
+            con.setRequestMethod(method);
+            /*if (method == "POST") {
+                View.getSingleton().getOutputPanel().append("inside post con method before properties\n");
+                con.setRequestProperty("Content-Type", "application/json; utf-8");
+                con.setRequestProperty("Accept", "application/json");
+                con.setDoOutput(true);
+                jsonObjectResponse createJsonObject = new jsonObjectResponse();
+                Gson gsonSetOptions = new Gson();
+                String objectToJson = gsonSetOptions.toJson(createJsonObject);
+                try(OutputStream os = con.getOutputStream()) {
+                    View.getSingleton().getOutputPanel().append("try os\n");
+                    byte[] input = objectToJson.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }*/
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        }
+
+        int responseCode = 0;
+        try {
+            responseCode = con.getResponseCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // View.getSingleton().getOutputPanel().append("GET Response Code :: " + responseCode);
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String inputLine = null;
+            StringBuffer response = new StringBuffer();
+
+            while (true) {
+                try {
+                    if (!((inputLine = in.readLine()) != null)) break;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                response.append(inputLine);
+            }
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            View.getSingleton()
+                    .getOutputPanel()
+                    .append("raw data from scan is: " + response + "\n");
+
+            View.getSingleton().showMessageDialog(Constant.messages.getString(ExtensionSqlMap.PREFIX + ".popup.msg", response));
+
+//            Gson gson = new Gson();
+//
+//            response1 = gson.fromJson(String.valueOf(response), idsuccessResponse.class);
+
+            /*View.getSingleton()
+                    .getOutputPanel()
+                    .append("taskid is: " + response1.getTaskid() + "\n");
+            View.getSingleton().getOutputPanel().append(response + "\n");*/
+
+//            if (response1.getTaskid().length() > 0 && response1.getSuccess() == "true"){
+//                response1.setSuccess("failed");
+//                View.getSingleton().getOutputPanel().append("creating task with POST\n");
+//                createTask("POST", URL, response1.getTaskid());
+//            }
+
+//            View.getSingleton()
+//                    .getOutputPanel()
+//                    .append("inside get status is: " + response1.getStatus() + "\n");
+        } else {
+            View.getSingleton().getOutputPanel().append("GET request not worked\n");
+        }
+//        return response1.getStatus();
     }
 }
 
@@ -424,11 +532,11 @@ class idsuccessResponse {
     }
 
     public String getStatus() {
-        return success;
+        return status;
     }
 
-    public void setStatus(String taskid) {
-        this.taskid = taskid;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setTaskid(String taskid) {

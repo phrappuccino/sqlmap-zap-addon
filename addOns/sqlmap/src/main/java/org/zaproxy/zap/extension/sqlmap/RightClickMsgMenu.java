@@ -55,11 +55,11 @@ public class RightClickMsgMenu extends PopupMenuItemHttpMessageContainer {
         // In this case we'll just show a popup message.
         getSqlmapDialog().init(msg);
         getSqlmapDialog().setVisible(true);
-        //        View.getSingleton()
-        //                .showMessageDialog(
-        //                        Constant.messages.getString(
-        //                                ExtensionSqlMap.PREFIX + ".popup.msg",
-        //                                msg.getRequestHeader().getURI().toString()));
+//                View.getSingleton()
+//                        .showMessageDialog(
+//                                Constant.messages.getString(
+//                                        ExtensionSqlMap.PREFIX + ".popup.msg",
+//                                        msg.getRequestHeader().getURI().toString()));
     }
 
     @Override

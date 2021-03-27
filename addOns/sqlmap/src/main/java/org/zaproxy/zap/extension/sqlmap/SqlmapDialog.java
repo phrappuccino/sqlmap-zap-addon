@@ -146,9 +146,9 @@ public class SqlmapDialog extends StandardFieldsDialog {
 
     private void addRemainingFields() {
         //        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
-        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TESTPARAMETERS, "");
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TESTPARAMETERS, "id");
 
-        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "1");
+        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "3");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RISK, RISK_CHOICES, "1");
 
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_PARAMPOLLUTION, false);
@@ -162,7 +162,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTROLES, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTPRIVS, false);
 
-        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_THREADS, THREADS_CHOICES, "5");
+        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_THREADS, THREADS_CHOICES, "1");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RETRIES, RETRIES_CHOICES, "3");
 
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_DBMSBACKEND, DBMS_BACKEND_CHOICES, "Any");
@@ -187,7 +187,40 @@ public class SqlmapDialog extends StandardFieldsDialog {
     }
 
     @Override
-    public void save() {}
+    public void save() {
+        jsonObjectResponse optionsObject = new jsonObjectResponse();
+        communicationToAPI1 = new communicationToAPI(optionsObject);
+        String APIUrl = this.getStringValue(FIELD_SQLMAP_NAME_APIIPPORT);
+        optionsObject.setUrl(this.getStringValue(FIELD_SQLMAP_NAME_TARGETURL));
+        optionsObject.setData(this.getStringValue(FIELD_SQLMAP_NAME_TARGETPOSTDATA));
+        optionsObject.setCookie(this.getStringValue(FIELD_SQLMAP_NAME_TARGETCOOKIES));
+        optionsObject.setTestParameter(this.getStringValue(FIELD_SQLMAP_NAME_TESTPARAMETERS));
+        optionsObject.setLevel(this.getStringValue(FIELD_SQLMAP_NAME_LEVEL));
+        optionsObject.setRisk(this.getStringValue(FIELD_SQLMAP_NAME_RISK));
+        optionsObject.setHpp(this.getStringValue(FIELD_SQLMAP_NAME_PARAMPOLLUTION));
+        optionsObject.setGetUsers(this.getStringValue(FIELD_SQLMAP_NAME_LISTUSERS));
+        optionsObject.setGetCurrentUser(this.getStringValue(FIELD_SQLMAP_NAME_CURRENTUSER));
+        optionsObject.setGetPasswordHashes(this.getStringValue(FIELD_SQLMAP_NAME_LISTPASSWORDS));
+        optionsObject.setGetCurrentDb(this.getStringValue(FIELD_SQLMAP_NAME_CURRENTDB));
+        optionsObject.setGetHostname(this.getStringValue(FIELD_SQLMAP_NAME_HOSTNAME));
+        optionsObject.setIsDba(this.getStringValue(FIELD_SQLMAP_NAME_ISDBA));
+        optionsObject.setGetDbs(this.getStringValue(FIELD_SQLMAP_NAME_LISTDBS));
+        optionsObject.setGetRoles(this.getStringValue(FIELD_SQLMAP_NAME_LISTROLES));
+        optionsObject.setGetPrivileges(this.getStringValue(FIELD_SQLMAP_NAME_LISTPRIVS));
+        optionsObject.setThreads(this.getStringValue(FIELD_SQLMAP_NAME_THREADS));
+        optionsObject.setRetries(this.getStringValue(FIELD_SQLMAP_NAME_RETRIES));
+
+        if(!this.getStringValue(FIELD_SQLMAP_NAME_DBMSBACKEND).equals("Any")){
+            optionsObject.setDbms(this.getStringValue(FIELD_SQLMAP_NAME_DBMSBACKEND));
+
+        }
+        if(!this.getStringValue(FIELD_SQLMAP_NAME_OS).equals("Any")){
+            optionsObject.setOs(this.getStringValue(FIELD_SQLMAP_NAME_OS));
+
+        }
+
+        communicationToAPI1.startScanAPI(APIUrl);
+    }
 
     @Override
     public String validateFields() {
@@ -196,41 +229,8 @@ public class SqlmapDialog extends StandardFieldsDialog {
 
     private void reset(boolean refreshUi) {
         if (refreshUi) {
-            String string = "Hello";
-            int returncode = 2;
-            // sqliopts = {'authType': authtype, 'csrfUrl': csrfurl, 'csrfToken': csrftoken,
-            // 'getUsers': lusersstatus, 'getPasswordHashes': lpswdsstatus, 'delay':
-            // self._jComboDelay.getSelectedItem(), 'isDba': isdbastatus, 'risk':
-            // self._jComboRisk.getSelectedItem(), 'getCurrentUser': custatus, 'getRoles':
-            // lrolesstatus, 'getPrivileges': lprivsstatus, 'testParameter': paramdata, 'timeout':
-            // self._jComboTimeout.getSelectedItem(), 'ignoreCode': ignorecodedata, 'torPort':
-            // torport, 'level': self._jComboLevel.getSelectedItem(), 'getCurrentDb': cdbstatus,
-            // 'answers': 'crack=N,dict=N,continue=Y,quit=N', 'method': httpmethod, 'cookie':
-            // cookiedata, 'proxy': proxy, 'os': os, 'threads':
-            // self._jComboThreads.getSelectedItem(), 'url': self._jTextFieldURL.getText(),
-            // 'getDbs': ldbsstatus, 'tor': torstatus, 'torType': tortype, 'referer': refererdata,
-            // 'retries': self._jComboRetry.getSelectedItem(), 'headers': custheaderdata,
-            // 'authCred': authcred, 'timeSec': self._jComboTimeSec.getSelectedItem(),
-            // 'getHostname': hostnamestatus, 'agent': uadata, 'dbms': dbms, 'tamper': tamperdata,
-            // 'hpp': hppstatus, 'getBanner': 'true', 'data': postdata, 'textOnly': textonlystatus}
-            String jsonInputString = "{'authType': null, }";
-            // {    "taskid": "e8540cc7c36f3c65",     "success": true}
-            jsonObjectResponse optionsObject = new jsonObjectResponse();
-            communicationToAPI1 = new communicationToAPI(string, optionsObject);
-            String APIUrl = this.getStringValue(FIELD_SQLMAP_NAME_APIIPPORT);
-            optionsObject.setUrl(this.getStringValue(FIELD_SQLMAP_NAME_TARGETURL));
-            optionsObject.setData(this.getStringValue(FIELD_SQLMAP_NAME_TARGETPOSTDATA));
-            optionsObject.setCookie(this.getStringValue(FIELD_SQLMAP_NAME_TARGETCOOKIES));
-            optionsObject.setTestParameter(this.getStringValue(FIELD_SQLMAP_NAME_TESTPARAMETERS));
-            optionsObject.setUrl(this.getStringValue(FIELD_SQLMAP_NAME_TARGETURL));
-            optionsObject.setUrl(this.getStringValue(FIELD_SQLMAP_NAME_TARGETURL));
-
-            communicationToAPI1.startScanAPI(APIUrl);
-
-            //            communicationToAPI commu = null;
-            //            returncode = commu.sendReq();
-            //            init();
-            //            repaint();
+            init();
+            repaint();
         }
     }
 
