@@ -495,7 +495,7 @@ public class CommunicationToAPI {
 
             View.getSingleton().getOutputPanel().append("before new object generate report\n");
 
-            GenerateReport generateReport = new GenerateReport(response.toString());
+            GenerateReport generateReport = new GenerateReport(response.toString(),passedTaskID);
 
             View.getSingleton().getOutputPanel().append("before set attributes\n");
             generateReport.setAttributes();

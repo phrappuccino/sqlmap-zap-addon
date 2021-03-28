@@ -6,6 +6,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.parosproxy.paros.view.View;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class GenerateReport {
     private String taskID;      //ID on API
     private String vulndetails; //targetURL + parameters data|value|query
@@ -24,8 +29,9 @@ public class GenerateReport {
     private String jsonStringFromAPI;
     private JsonObject jsonObject;
 
-    public GenerateReport(String jsonStringFromAPI) {
+    public GenerateReport(String jsonStringFromAPI, String taskID) {
         setJsonStringFromAPI(jsonStringFromAPI);
+        setTaskID(taskID);
     }
 
     public void setAttributes() {
@@ -97,17 +103,50 @@ public class GenerateReport {
                 }
             }
             else if (typeFromData.toString().equals("8")){
-//                for (int k = 0; k < 10; k++){
-//                    boolean test = valueElement.getAsJsonObject().has(String.valueOf(k));
-//                    if (test){
-//                        JsonElement innerDataEnum = innerData.getAsJsonObject().get(String.valueOf(k));
-//                        JsonElement innerPayload = innerDataEnum.getAsJsonObject().get("payload");
-//                        setPayloads(getPayloads() + "<li>" + innerPayload.toString() + "</li>");
-//                    }
-//                }
+                JsonArray valueArray = valueElement.getAsJsonArray();
+                for (int l = 0; l < valueArray.size(); l++){
+                    JsonElement temp = valueArray.get(l);
+                    setListUsers("<li>" + temp.toString() + "</li>");
+                }
+                setListUsers("Users:<ul>" + getListUsers() + "</ul><BR>");
+            }
+            else if (typeFromData.toString().equals("9")){
+
+            }
+            else if (typeFromData.toString().equals("10")){
+
+            }
+            else if (typeFromData.toString().equals("11")){
+
+            }
+            else if (typeFromData.toString().equals("12")){
+
             }
         }
-        
+        String reportAsString = "<html><head><title>SQLMap Scan - " + taskID + "</title></head><body>" +
+        "<h1>SQLMap Scan Finding</h1><br><p>The application has been found to be vulnerable to SQL injection by SQLMap.</p><br>" +
+                "<p>Vulnerable URL and Parameter:</p><p>"+vulndetails+"</p>" +
+                "<p>The following payloads successfully identified SQL injection vulnerabilities:</p><p>"+payloads+"</p><p>Enumerated Data:</p><BR><p>"+dbtype+": "+banner+"</p><p>"+currentUser+"</p><p>"+currentDB+"</p><p>"+hostname+"</p><p>"+isdba+"</p><p>"+listUsers+"</p><p>"+listPasswords+"</p><p>"+listPrivs+"</p><p>"+listRoles+"</p><p>"+listDBS+"</p>"+
+                "</body></html>";
+        writeToFile(reportAsString, getTaskID());
+    }
+
+    private void writeToFile(String string, String fileName) {
+        fileName = System.getProperty("user.home") + "\\Documents\\" + fileName + ".html";
+        try {
+            File myFile = new File(fileName);
+            if(myFile.createNewFile()){
+                View.getSingleton().getOutputPanel().append("File created: " + fileName + "\n");
+            }else {
+                View.getSingleton().getOutputPanel().append("File already exsits!\n");
+            }
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(string);
+
+            writer.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public JsonObject getJsonObject() {
