@@ -33,10 +33,10 @@ import java.util.concurrent.TimeUnit;
 import org.parosproxy.paros.view.View;
 import org.parosproxy.paros.Constant;
 
-public class communicationToAPI {
-    jsonObjectResponse optionsObject;
+public class CommunicationToAPI {
+    JsonObjectResponse optionsObject;
 
-    public communicationToAPI(jsonObjectResponse optionsObject) {
+    public CommunicationToAPI(JsonObjectResponse optionsObject) {
         this.optionsObject = optionsObject;
     }
 
@@ -49,7 +49,7 @@ public class communicationToAPI {
             String statusFromF = getStatusFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
             int i = 0;
             i++;
-            if (i > 15){
+            if (i > 20){
                 break;
             }
             if (statusFromF.equals("terminated")){
@@ -65,7 +65,7 @@ public class communicationToAPI {
 
     public String createTask(String method, String URL) {
         URL obj = null;
-        idsuccessResponse response1 = new idsuccessResponse();
+        IdSuccessResponse response1 = new IdSuccessResponse();
         try {
             obj = new URL(URL + "/task/new");
         } catch (MalformedURLException e) {
@@ -87,7 +87,7 @@ public class communicationToAPI {
                 con.setRequestProperty("Content-Type", "application/json; utf-8");
                 con.setRequestProperty("Accept", "application/json");
                 con.setDoOutput(true);
-                jsonObjectResponse createJsonObject = new jsonObjectResponse();
+                JsonObjectResponse createJsonObject = new JsonObjectResponse();
                 Gson gsonSetOptions = new Gson();
                 String objectToJson = gsonSetOptions.toJson(createJsonObject);
                 try(OutputStream os = con.getOutputStream()) {
@@ -135,7 +135,7 @@ public class communicationToAPI {
 
             Gson gson = new Gson();
 
-            response1 = gson.fromJson(String.valueOf(response), idsuccessResponse.class);
+            response1 = gson.fromJson(String.valueOf(response), IdSuccessResponse.class);
 
             View.getSingleton()
                     .getOutputPanel()
@@ -225,7 +225,7 @@ public class communicationToAPI {
 
             /*Gson gson = new Gson();
 
-            idsuccessResponse response1 = gson.fromJson(String.valueOf(response), idsuccessResponse.class);
+            IdSuccessResponse response1 = gson.fromJson(String.valueOf(response), IdSuccessResponse.class);
 
             View.getSingleton()
                     .getOutputPanel()
@@ -310,7 +310,7 @@ public class communicationToAPI {
 
             /*Gson gson = new Gson();
 
-            idsuccessResponse response1 = gson.fromJson(String.valueOf(response), idsuccessResponse.class);
+            IdSuccessResponse response1 = gson.fromJson(String.valueOf(response), IdSuccessResponse.class);
 
             View.getSingleton()
                     .getOutputPanel()
@@ -325,7 +325,7 @@ public class communicationToAPI {
 
     public String getStatusFromAPI(String method, String URL, String passedTaskID) {
         URL obj = null;
-        idsuccessResponse response1 = new idsuccessResponse();
+        IdSuccessResponse response1 = new IdSuccessResponse();
         try {
             obj = new URL(URL + "/scan/" + passedTaskID + "/status"); // ip:Port/scan/ID/status       ip:Port/scan/ID/data
         } catch (MalformedURLException e) {
@@ -347,7 +347,7 @@ public class communicationToAPI {
                 con.setRequestProperty("Content-Type", "application/json; utf-8");
                 con.setRequestProperty("Accept", "application/json");
                 con.setDoOutput(true);
-                jsonObjectResponse createJsonObject = new jsonObjectResponse();
+                JsonObjectResponse createJsonObject = new JsonObjectResponse();
                 Gson gsonSetOptions = new Gson();
                 String objectToJson = gsonSetOptions.toJson(createJsonObject);
                 try(OutputStream os = con.getOutputStream()) {
@@ -395,7 +395,7 @@ public class communicationToAPI {
 
             Gson gson = new Gson();
 
-            response1 = gson.fromJson(String.valueOf(response), idsuccessResponse.class);
+            response1 = gson.fromJson(String.valueOf(response), IdSuccessResponse.class);
 
             /*View.getSingleton()
                     .getOutputPanel()
@@ -419,7 +419,7 @@ public class communicationToAPI {
 
     public void getDataFromAPI(String method, String URL, String passedTaskID) {
         URL obj = null;
-//        idsuccessResponse response1 = new idsuccessResponse();
+//        IdSuccessResponse response1 = new IdSuccessResponse();
         try {
             obj = new URL(URL + "/scan/" + passedTaskID + "/data"); // ip:Port/scan/ID/status       ip:Port/scan/ID/data
         } catch (MalformedURLException e) {
@@ -441,7 +441,7 @@ public class communicationToAPI {
                 con.setRequestProperty("Content-Type", "application/json; utf-8");
                 con.setRequestProperty("Accept", "application/json");
                 con.setDoOutput(true);
-                jsonObjectResponse createJsonObject = new jsonObjectResponse();
+                JsonObjectResponse createJsonObject = new JsonObjectResponse();
                 Gson gsonSetOptions = new Gson();
                 String objectToJson = gsonSetOptions.toJson(createJsonObject);
                 try(OutputStream os = con.getOutputStream()) {
@@ -487,15 +487,27 @@ public class communicationToAPI {
                 e.printStackTrace();
             }
 
+//            View.getSingleton()
+//                    .getOutputPanel()
+//                    .append("raw data from scan is: " + response + "\n");
+
+//            View.getSingleton().showMessageDialog(Constant.messages.getString(ExtensionSqlMap.PREFIX + ".popup.msg", response));
+
+            View.getSingleton().getOutputPanel().append("before new object generate report\n");
+
+            GenerateReport generateReport = new GenerateReport(response.toString());
+
+            View.getSingleton().getOutputPanel().append("before set attributes\n");
+            generateReport.setAttributes();
+            String vulndetails = generateReport.getVulndetails();
+
             View.getSingleton()
                     .getOutputPanel()
-                    .append("raw data from scan is: " + response + "\n");
-
-            View.getSingleton().showMessageDialog(Constant.messages.getString(ExtensionSqlMap.PREFIX + ".popup.msg", response));
+                    .append("vulndetails are: " + vulndetails + "\n");
 
 //            Gson gson = new Gson();
 //
-//            response1 = gson.fromJson(String.valueOf(response), idsuccessResponse.class);
+//            response1 = gson.fromJson(String.valueOf(response), IdSuccessResponse.class);
 
             /*View.getSingleton()
                     .getOutputPanel()
@@ -518,7 +530,7 @@ public class communicationToAPI {
     }
 }
 
-class idsuccessResponse {
+class IdSuccessResponse {
     private String taskid = "";
     private String success = "";
     private String status = "";

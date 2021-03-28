@@ -1,6 +1,6 @@
 package org.zaproxy.zap.extension.sqlmap;
 
-public class jsonObjectResponse {
+public class JsonObjectResponse {
     private String authType = null;
     private String csrfUrl = null;
     private String csrfToken = null;

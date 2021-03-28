@@ -113,7 +113,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
     private DefaultListModel<String> sitesModel;
     private JList<Context> contextsSelector;
     private JList<String> sitesSelector;
-    private communicationToAPI communicationToAPI1;
+    private CommunicationToAPI communicationToAPI1;
 
     public SqlmapDialog(ExtensionSqlMap ext, Frame owner) {
         super(owner, "sqlmap.dialog.title", DisplayUtils.getScaledDimension(600, 800), TAB_LABELS);
@@ -188,8 +188,8 @@ public class SqlmapDialog extends StandardFieldsDialog {
 
     @Override
     public void save() {
-        jsonObjectResponse optionsObject = new jsonObjectResponse();
-        communicationToAPI1 = new communicationToAPI(optionsObject);
+        JsonObjectResponse optionsObject = new JsonObjectResponse();
+        communicationToAPI1 = new CommunicationToAPI(optionsObject);
         String APIUrl = this.getStringValue(FIELD_SQLMAP_NAME_APIIPPORT);
         optionsObject.setUrl(this.getStringValue(FIELD_SQLMAP_NAME_TARGETURL));
         optionsObject.setData(this.getStringValue(FIELD_SQLMAP_NAME_TARGETPOSTDATA));
@@ -197,16 +197,16 @@ public class SqlmapDialog extends StandardFieldsDialog {
         optionsObject.setTestParameter(this.getStringValue(FIELD_SQLMAP_NAME_TESTPARAMETERS));
         optionsObject.setLevel(this.getStringValue(FIELD_SQLMAP_NAME_LEVEL));
         optionsObject.setRisk(this.getStringValue(FIELD_SQLMAP_NAME_RISK));
-        optionsObject.setHpp(this.getStringValue(FIELD_SQLMAP_NAME_PARAMPOLLUTION));
-        optionsObject.setGetUsers(this.getStringValue(FIELD_SQLMAP_NAME_LISTUSERS));
-        optionsObject.setGetCurrentUser(this.getStringValue(FIELD_SQLMAP_NAME_CURRENTUSER));
-        optionsObject.setGetPasswordHashes(this.getStringValue(FIELD_SQLMAP_NAME_LISTPASSWORDS));
-        optionsObject.setGetCurrentDb(this.getStringValue(FIELD_SQLMAP_NAME_CURRENTDB));
-        optionsObject.setGetHostname(this.getStringValue(FIELD_SQLMAP_NAME_HOSTNAME));
-        optionsObject.setIsDba(this.getStringValue(FIELD_SQLMAP_NAME_ISDBA));
-        optionsObject.setGetDbs(this.getStringValue(FIELD_SQLMAP_NAME_LISTDBS));
-        optionsObject.setGetRoles(this.getStringValue(FIELD_SQLMAP_NAME_LISTROLES));
-        optionsObject.setGetPrivileges(this.getStringValue(FIELD_SQLMAP_NAME_LISTPRIVS));
+        optionsObject.setHpp(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_PARAMPOLLUTION)));
+        optionsObject.setGetUsers(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTUSERS)));
+        optionsObject.setGetCurrentUser(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_CURRENTUSER)));
+        optionsObject.setGetPasswordHashes(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTPASSWORDS)));
+        optionsObject.setGetCurrentDb(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_CURRENTDB)));
+        optionsObject.setGetHostname(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_HOSTNAME)));
+        optionsObject.setIsDba(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_ISDBA)));
+        optionsObject.setGetDbs(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTDBS)));
+        optionsObject.setGetRoles(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTROLES)));
+        optionsObject.setGetPrivileges(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTPRIVS)));
         optionsObject.setThreads(this.getStringValue(FIELD_SQLMAP_NAME_THREADS));
         optionsObject.setRetries(this.getStringValue(FIELD_SQLMAP_NAME_RETRIES));
 
