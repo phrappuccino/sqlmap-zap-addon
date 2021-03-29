@@ -136,26 +136,26 @@ public class GenerateReport {
         reportAsString = reportAsString + "<p>Vulnerable URL and Parameter:</p><p>"+getVulndetails()+"</p>";
         reportAsString = reportAsString + "<p>The following payloads successfully identified SQL injection vulnerabilities:</p>;";
         reportAsString = reportAsString + "<p>"+getPayloads()+"</p><p>Enumerated Data:</p>";
-        if (!dbtype.equals("")){
-            reportAsString = reportAsString + "<p>Databasetype: "+dbtype+": "+banner+"</p>";
+        if (!getDbtype().equals("")){
+            reportAsString = reportAsString + "<p>Databasetype: "+getDbtype()+": "+getBanner()+"</p>";
         }
-        if (currentUser.equals("")){
-            reportAsString = reportAsString + "<p>"+currentUser+"</p>";
+        if (getCurrentUser().equals("")){
+            reportAsString = reportAsString + "<p>"+getCurrentUser()+"</p>";
         }
-        if (!currentDB.equals("")){
-            reportAsString = reportAsString + "<p>"+currentDB+"</p>";
+        if (!getCurrentDB().equals("")){
+            reportAsString = reportAsString + "<p>"+getCurrentDB()+"</p>";
         }
-        if (!hostname.equals("")){
-            reportAsString = reportAsString + "<p>"+hostname+"</p>";
+        if (!getHostname().equals("")){
+            reportAsString = reportAsString + "<p>"+getHostname()+"</p>";
         }
-        if (!isdba.equals("")){
-            reportAsString = reportAsString + "<p>"+isdba+"</p>";
+        if (!getIsdba().equals("")){
+            reportAsString = reportAsString + "<p>"+getIsdba()+"</p>";
         }
-        if (!listUsers.equals("")){
-            reportAsString = reportAsString + "<p>"+listUsers+"</p>";
+        if (!getListUsers().equals("")){
+            reportAsString = reportAsString + "<p>"+getListUsers()+"</p>";
         }
-        if (!listDBS.equals("")){
-            reportAsString = reportAsString + "<p>"+listDBS+"</p>";
+        if (!getListDBS().equals("")){
+            reportAsString = reportAsString + "<p>"+getListDBS()+"</p>";
         }
         reportAsString = reportAsString + "</body></html>";
         /*+listPasswords+"</p><p>"+listPrivs+"</p><p>"+listRoles+"</p>"<p>"*/
