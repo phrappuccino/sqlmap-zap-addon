@@ -16,16 +16,16 @@ public class GenerateReport {
     private String vulndetails; //targetURL + parameters data|value|query
     private String payloads = "";
     private String dbtype = "";
-    private String banner;
-    private String currentUser;
-    private String currentDB;
-    private String hostname;
-    private String isdba;
-    private String listUsers;
+    private String banner = "";
+    private String currentUser = "";
+    private String currentDB = "";
+    private String hostname = "";
+    private String isdba = "";
+    private String listUsers = "";
     private String listPasswords;
     private String listPrivs;
     private String listRoles;
-    private String listDBS;
+    private String listDBS = "";
     private String jsonStringFromAPI;
     private JsonObject jsonObject;
 
@@ -49,7 +49,7 @@ public class GenerateReport {
                 setVulndetails("<ul><li>URL: " + valueElement.getAsJsonObject().get("url").toString() + "</li><li>Parameter: " + valueElement.getAsJsonObject().get("query").toString() + "</li></ul>");
             }
             else if (typeFromData.toString().equals("1")){
-                View.getSingleton().getOutputPanel().append("type is: " + typeFromData.toString() + "\n");
+//                View.getSingleton().getOutputPanel().append("type is: " + typeFromData.toString() + "\n");
                 JsonArray valueArray = valueElement.getAsJsonArray();
                 for (int j = 0; j < valueArray.size(); j++){
                     View.getSingleton().getOutputPanel().append("value array size is: " + valueArray.size() + "\n");
@@ -79,55 +79,86 @@ public class GenerateReport {
                 }
             }
             else if (typeFromData.toString().equals("3")){
-                setBanner(valueElement.getAsString() + "<BR>");
-                View.getSingleton().getOutputPanel().append("banner is: " + getBanner());
+                if (!valueElement.getAsString().equals("")) {
+                    setBanner(valueElement.getAsString() + "<BR>");
+                }
+//                View.getSingleton().getOutputPanel().append("banner is: " + getBanner());
             }
             else if (typeFromData.toString().equals("4")){
-                setCurrentUser("Current User: " + valueElement.getAsString() + "<BR>");
-                View.getSingleton().getOutputPanel().append("current user is: " + getCurrentUser());
+                if (!valueElement.getAsString().equals("")) {
+                    setCurrentUser("Current User: " + valueElement.getAsString() + "<BR>");
+                }
+//                View.getSingleton().getOutputPanel().append("current user is: " + getCurrentUser());
             }
             else if (typeFromData.toString().equals("5")){
-                setCurrentDB("Current Database: " + valueElement.getAsString() + "<BR>");
+                if (!valueElement.getAsString().equals("")) {
+                    setCurrentDB("Current Database: " + valueElement.getAsString() + "<BR>");
+                }
                 View.getSingleton().getOutputPanel().append("current db is: " + getCurrentDB());
             }
             else if (typeFromData.toString().equals("6")){
-                setHostname("Hostname: " + valueElement.getAsString() + "(empty if enumeration failed)<BR>");
+                if (!valueElement.getAsString().equals("")) {
+                    setHostname("Hostname: " + valueElement.getAsString() + "(empty if enumeration failed)<BR>");
+                }
                 View.getSingleton().getOutputPanel().append("current hostname is: " + getHostname());
             }
             else if (typeFromData.toString().equals("7")){
-                if (valueElement.getAsString().equals("true")){
-                    setIsdba("Is DBA: Yes<BR>");
-                }
-                else {
-                    setIsdba("Is DBA: No<BR>");
+                if (!valueElement.getAsString().equals("")) {
+                    if (valueElement.getAsString().equals("true")) {
+                        setIsdba("Is DBA: Yes<BR>");
+                    } else {
+                        setIsdba("Is DBA: No<BR>");
+                    }
                 }
             }
             else if (typeFromData.toString().equals("8")){
-                JsonArray valueArray = valueElement.getAsJsonArray();
-                for (int l = 0; l < valueArray.size(); l++){
-                    JsonElement temp = valueArray.get(l);
-                    setListUsers("<li>" + temp.toString() + "</li>");
+                if (!valueElement.getAsString().equals("")) {
+                    JsonArray valueArray = valueElement.getAsJsonArray();
+                    for (int l = 0; l < valueArray.size(); l++) {
+                        JsonElement temp = valueArray.get(l);
+                        setListUsers(getListUsers() + "<li>" + temp.toString() + "</li>");
+                    }
+                    setListUsers("Users:<ul>" + getListUsers() + "</ul><BR>");
                 }
-                setListUsers("Users:<ul>" + getListUsers() + "</ul><BR>");
-            }
-            else if (typeFromData.toString().equals("9")){
-
-            }
-            else if (typeFromData.toString().equals("10")){
-
-            }
-            else if (typeFromData.toString().equals("11")){
-
             }
             else if (typeFromData.toString().equals("12")){
-
+                JsonArray valueArray = valueElement.getAsJsonArray();
+                for (int m = 0; m < valueArray.size(); m++){
+                    JsonElement temp = valueArray.get(m);
+                    View.getSingleton().getOutputPanel().append("databases are: " + temp.toString() + "\n");
+                    setListDBS(getListDBS() + "<li>" + temp.toString() + "</li>");
+                }
+                setListDBS("Databases:<ul>" + getListDBS() + "</ul><BR>");
             }
         }
-        String reportAsString = "<html><head><title>SQLMap Scan - " + taskID + "</title></head><body>" +
-        "<h1>SQLMap Scan Finding</h1><br><p>The application has been found to be vulnerable to SQL injection by SQLMap.</p><br>" +
-                "<p>Vulnerable URL and Parameter:</p><p>"+vulndetails+"</p>" +
-                "<p>The following payloads successfully identified SQL injection vulnerabilities:</p><p>"+payloads+"</p><p>Enumerated Data:</p><BR><p>"+dbtype+": "+banner+"</p><p>"+currentUser+"</p><p>"+currentDB+"</p><p>"+hostname+"</p><p>"+isdba+"</p><p>"+listUsers+"</p><p>"+listPasswords+"</p><p>"+listPrivs+"</p><p>"+listRoles+"</p><p>"+listDBS+"</p>"+
-                "</body></html>";
+        String reportAsString =             "<html><head><title>SQLMap Scan - " + getTaskID() + "</title></head><body>";
+        reportAsString = reportAsString + "<h1>SQLMap Scan Finding</h1><br><p>The application has been found to be vulnerable to SQL injection by SQLMap.</p><br>";
+        reportAsString = reportAsString + "<p>Vulnerable URL and Parameter:</p><p>"+getVulndetails()+"</p>";
+        reportAsString = reportAsString + "<p>The following payloads successfully identified SQL injection vulnerabilities:</p>;";
+        reportAsString = reportAsString + "<p>"+getPayloads()+"</p><p>Enumerated Data:</p>";
+        if (!dbtype.equals("")){
+            reportAsString = reportAsString + "<p>Databasetype: "+dbtype+": "+banner+"</p>";
+        }
+        if (currentUser.equals("")){
+            reportAsString = reportAsString + "<p>"+currentUser+"</p>";
+        }
+        if (!currentDB.equals("")){
+            reportAsString = reportAsString + "<p>"+currentDB+"</p>";
+        }
+        if (!hostname.equals("")){
+            reportAsString = reportAsString + "<p>"+hostname+"</p>";
+        }
+        if (!isdba.equals("")){
+            reportAsString = reportAsString + "<p>"+isdba+"</p>";
+        }
+        if (!listUsers.equals("")){
+            reportAsString = reportAsString + "<p>"+listUsers+"</p>";
+        }
+        if (!listDBS.equals("")){
+            reportAsString = reportAsString + "<p>"+listDBS+"</p>";
+        }
+        reportAsString = reportAsString + "</body></html>";
+        /*+listPasswords+"</p><p>"+listPrivs+"</p><p>"+listRoles+"</p>"<p>"*/
         writeToFile(reportAsString, getTaskID());
     }
 

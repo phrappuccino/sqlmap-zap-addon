@@ -154,13 +154,13 @@ public class SqlmapDialog extends StandardFieldsDialog {
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_PARAMPOLLUTION, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTUSERS, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_CURRENTUSER, false);
-        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTPASSWORDS, false);
+//        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTPASSWORDS, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_CURRENTDB, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_HOSTNAME, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_ISDBA, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTDBS, false);
-        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTROLES, false);
-        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTPRIVS, false);
+//        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTROLES, false);
+//        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTPRIVS, false);
 
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_THREADS, THREADS_CHOICES, "1");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RETRIES, RETRIES_CHOICES, "3");
@@ -200,13 +200,13 @@ public class SqlmapDialog extends StandardFieldsDialog {
         optionsObject.setHpp(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_PARAMPOLLUTION)));
         optionsObject.setGetUsers(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTUSERS)));
         optionsObject.setGetCurrentUser(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_CURRENTUSER)));
-        optionsObject.setGetPasswordHashes(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTPASSWORDS)));
+//        optionsObject.setGetPasswordHashes(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTPASSWORDS)));
         optionsObject.setGetCurrentDb(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_CURRENTDB)));
         optionsObject.setGetHostname(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_HOSTNAME)));
         optionsObject.setIsDba(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_ISDBA)));
         optionsObject.setGetDbs(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTDBS)));
-        optionsObject.setGetRoles(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTROLES)));
-        optionsObject.setGetPrivileges(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTPRIVS)));
+//        optionsObject.setGetRoles(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTROLES)));
+//        optionsObject.setGetPrivileges(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTPRIVS)));
         optionsObject.setThreads(this.getStringValue(FIELD_SQLMAP_NAME_THREADS));
         optionsObject.setRetries(this.getStringValue(FIELD_SQLMAP_NAME_RETRIES));
 
