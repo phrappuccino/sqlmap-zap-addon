@@ -82,6 +82,7 @@ public class CommunicationToAPI {
             }
         }
         View.getSingleton().getOutputPanel().append("API could not be reached!\n");
+        setHttp_resp(0);
     }
 
     public String createTask(String method, String URL) {
