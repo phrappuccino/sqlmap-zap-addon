@@ -370,17 +370,5 @@ public class JsonObjectResponse {
     public void setTextOnly(String textOnly) {
         this.textOnly = textOnly;
     }
-    /*sqliopts = {'authType': authtype, 'csrfUrl': csrfurl, 'csrfToken': csrftoken,
-    'getUsers': lusersstatus, 'getPasswordHashes': lpswdsstatus, 'delay': self._jComboDelay.getSelectedItem(),
-     'isDba': isdbastatus, 'risk': self._jComboRisk.getSelectedItem(), 'getCurrentUser': custatus,
-      'getRoles': lrolesstatus, 'getPrivileges': lprivsstatus, 'testParameter': paramdata,
-       'timeout': self._jComboTimeout.getSelectedItem(), 'ignoreCode': ignorecodedata,
-        'torPort': torport, 'level': self._jComboLevel.getSelectedItem(), 'getCurrentDb': cdbstatus,
-         'answers': 'crack=N,dict=N,continue=Y,quit=N', 'method': httpmethod, 'cookie': cookiedata,
-          'proxy': proxy, 'os': os, 'threads': self._jComboThreads.getSelectedItem(), 'url': self._jTextFieldURL.getText(),
-           'getDbs': ldbsstatus, 'tor': torstatus, 'torType': tortype, 'referer': refererdata,
-            'retries': self._jComboRetry.getSelectedItem(), 'headers': custheaderdata, 'authCred': authcred,
-             'timeSec': self._jComboTimeSec.getSelectedItem(), 'getHostname': hostnamestatus, 'agent': uadata, 'dbms': dbms,
-              'tamper': tamperdata, 'hpp': hppstatus, 'getBanner': 'true', 'data': postdata, 'textOnly': textonlystatus}*/
 }
 

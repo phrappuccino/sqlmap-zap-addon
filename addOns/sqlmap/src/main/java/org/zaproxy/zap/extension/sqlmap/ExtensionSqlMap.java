@@ -175,11 +175,6 @@ public class ExtensionSqlMap extends ExtensionAdaptor {
                             this,
                             Constant.messages.getString(PREFIX + ".popup.title"),
                             View.getSingleton().getMainFrame());
-            //            popupMsgMenuSQLMap.addActionListener(
-            //                    e -> {
-            //                        getSqlmapDialog().init();
-            //                        getSqlmapDialog().setVisible(true);
-            //                    });
         }
         return popupMsgMenuSQLMap;
     }
