@@ -12,8 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class GenerateReport {
-    private String taskID;      //ID on API
-    private String vulndetails; //targetURL + parameters data|value|query
+    private String taskID;
+    private String vulndetails;
     private String payloads = "";
     private String dbtype = "";
     private String banner = "";
@@ -40,31 +40,24 @@ public class GenerateReport {
         JsonArray dataArray = data.getAsJsonArray();            //data[] from root element
 
         for (int i = 0; i < dataArray.size(); i++) {
-            View.getSingleton().getOutputPanel().append("array size "+dataArray.size() + " iteration " + i + "\n");
             JsonElement dataOuterArray = dataArray.get(i);
             JsonElement typeFromData = dataOuterArray.getAsJsonObject().get("type");
             JsonElement valueElement = dataOuterArray.getAsJsonObject().get("value");
             switch (typeFromData.toString()) {
                 case "0":
-                    View.getSingleton().getOutputPanel().append("type is: " + typeFromData.toString() + "\n");
                     setVulndetails("<ul><li>URL: " + valueElement.getAsJsonObject().get("url").toString() + "</li><li>Parameter: " + valueElement.getAsJsonObject().get("query").toString() + "</li></ul>");
                     break;
                 case "1": {
-//                View.getSingleton().getOutputPanel().append("type is: " + typeFromData.toString() + "\n");
                     JsonArray valueArray = valueElement.getAsJsonArray();
                     for (int j = 0; j < valueArray.size(); j++) {
-                        View.getSingleton().getOutputPanel().append("value array size is: " + valueArray.size() + "\n");
                         JsonElement valueOuterArray = valueArray.get(j);
                         JsonElement dbtype = valueOuterArray.getAsJsonObject().get("dbms");
-                        View.getSingleton().getOutputPanel().append("db type is: " + dbtype.toString() + "\n");
                         if (getDbtype().length() == 0) {
                             setDbtype(dbtype.toString());
                         } else if (!getDbtype().equals(dbtype.toString())) {
                             setDbtype(getDbtype() + ", or " + dbtype.toString());
                         }
-                        View.getSingleton().getOutputPanel().append("getDbtype after get: " + getDbtype() + "\n");
                         JsonElement innerData = valueOuterArray.getAsJsonObject().get("data");
-                        View.getSingleton().getOutputPanel().append("size is " + innerData.getAsJsonObject().size() + "\n");
 
                         for (int k = 0; k < 10; k++) {
                             boolean test = innerData.getAsJsonObject().has(String.valueOf(k));
@@ -75,7 +68,6 @@ public class GenerateReport {
                             }
                         }
                         setPayloads("<ul>" + getPayloads() + "</ul><BR>");
-                        View.getSingleton().getOutputPanel().append("payloads are: " + getPayloads());
                     }
                     break;
                 }
@@ -83,25 +75,21 @@ public class GenerateReport {
                     if (!valueElement.getAsString().equals("")) {
                         setBanner(valueElement.getAsString() + "<BR>");
                     }
-//                View.getSingleton().getOutputPanel().append("banner is: " + getBanner());
                     break;
                 case "4":
                     if (!valueElement.getAsString().equals("")) {
                         setCurrentUser("Current User: " + valueElement.getAsString() + "<BR>");
                     }
-//                View.getSingleton().getOutputPanel().append("current user is: " + getCurrentUser());
                     break;
                 case "5":
                     if (!valueElement.getAsString().equals("")) {
                         setCurrentDB("Current Database: " + valueElement.getAsString() + "<BR>");
                     }
-                    View.getSingleton().getOutputPanel().append("current db is: " + getCurrentDB());
                     break;
                 case "6":
                     if (!valueElement.getAsString().equals("")) {
                         setHostname("Hostname: " + valueElement.getAsString() + "(empty if enumeration failed)<BR>");
                     }
-                    View.getSingleton().getOutputPanel().append("current hostname is: " + getHostname());
                     break;
                 case "7":
                     if (!valueElement.getAsString().equals("")) {
