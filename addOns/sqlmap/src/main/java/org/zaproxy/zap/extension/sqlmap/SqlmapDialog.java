@@ -62,6 +62,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
     private static final String FIELD_SQLMAP_NAME_DBMSBACKEND = "sqlmap.dialog.field.dbmsbackend";
     private static final String FIELD_SQLMAP_NAME_OS = "sqlmap.dialog.field.os";
     private static final String FIELD_SQLMAP_NAME_TESTPARAMETERS = "sqlmap.dialog.field.testparams";
+    private static final String FIELD_SQLMAP_NAME_METHOD = "sqlmap.dialog.field.method";
 
     private static final String[] TAB_LABELS = {"sqlmap.dialog.tab.options"};
     private static final String[] LEVEL_CHOICES = {"1", "2", "3", "4", "5"};
@@ -111,6 +112,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
         "FrontBase"
     };
     private static final String[] OS_CHOICES = {"Any", "Linux", "Windows"};
+    private static final String[] METHOD_CHOICES = {"Default", "GET", "POST", "PUT", "DELETE", "PATCH"};
     private static final int TAB_OPTIONS = 0;
 
     private ExtensionSqlMap extension = null;
@@ -122,7 +124,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
     private CommunicationToAPI communicationToAPI1;
 
     public SqlmapDialog(ExtensionSqlMap ext, Frame owner) {
-        super(owner, "sqlmap.dialog.title", DisplayUtils.getScaledDimension(600, 800), TAB_LABELS);
+        super(owner, "sqlmap.dialog.title", DisplayUtils.getScaledDimension(600, 810), TAB_LABELS);
         this.extension = ext;
         reset(true);
     }
@@ -153,7 +155,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
     private void addRemainingFields() {
         //        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
         this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TESTPARAMETERS, "id");
-
+        this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_METHOD, METHOD_CHOICES, "Default");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "3");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RISK, RISK_CHOICES, "1");
 
@@ -208,6 +210,11 @@ public class SqlmapDialog extends StandardFieldsDialog {
         optionsObject.setData(this.getStringValue(FIELD_SQLMAP_NAME_TARGETPOSTDATA));
         optionsObject.setCookie(this.getStringValue(FIELD_SQLMAP_NAME_TARGETCOOKIES));
         optionsObject.setTestParameter(this.getStringValue(FIELD_SQLMAP_NAME_TESTPARAMETERS));
+
+        if(!this.getStringValue(FIELD_SQLMAP_NAME_METHOD).equals("Default")){
+            optionsObject.setMethod(this.getStringValue(FIELD_SQLMAP_NAME_METHOD));
+        }
+
         optionsObject.setLevel(this.getStringValue(FIELD_SQLMAP_NAME_LEVEL));
         optionsObject.setRisk(this.getStringValue(FIELD_SQLMAP_NAME_RISK));
 
@@ -247,11 +254,9 @@ public class SqlmapDialog extends StandardFieldsDialog {
 
         if(!this.getStringValue(FIELD_SQLMAP_NAME_DBMSBACKEND).equals("Any")){
             optionsObject.setDbms(this.getStringValue(FIELD_SQLMAP_NAME_DBMSBACKEND));
-
         }
         if(!this.getStringValue(FIELD_SQLMAP_NAME_OS).equals("Any")){
             optionsObject.setOs(this.getStringValue(FIELD_SQLMAP_NAME_OS));
-
         }
 
         communicationToAPI1.startScanAPI(APIUrl);

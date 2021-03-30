@@ -80,8 +80,9 @@ public class CommunicationToAPI {
                     e.printStackTrace();
                 }
             }
+        }else {
+            View.getSingleton().getOutputPanel().append("API could not be reached!\n");
         }
-        View.getSingleton().getOutputPanel().append("API could not be reached!\n");
         setHttp_resp(0);
     }
 

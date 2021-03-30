@@ -137,7 +137,7 @@ public class GenerateReport {
         String reportAsString =             "<html><head><title>SQLMap Scan - " + getTaskID() + "</title></head><body>";
         reportAsString = reportAsString + "<h1>SQLMap Scan Finding</h1><br><p>The application has been found to be vulnerable to SQL injection by SQLMap.</p><br>";
         reportAsString = reportAsString + "<p>Vulnerable URL and Parameter:</p><p>"+getVulndetails()+"</p>";
-        reportAsString = reportAsString + "<p>The following payloads successfully identified SQL injection vulnerabilities:</p>;";
+        reportAsString = reportAsString + "<p>The following payloads successfully identified SQL injection vulnerabilities:</p>";
         reportAsString = reportAsString + "<p>"+getPayloads()+"</p><p>Enumerated Data:</p>";
         if (!getDbtype().equals("")){
             reportAsString = reportAsString + "<p>Databasetype: "+getDbtype()+": "+getBanner()+"</p>";
