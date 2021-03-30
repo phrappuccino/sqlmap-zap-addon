@@ -154,7 +154,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
 
     private void addRemainingFields() {
         //        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_USERAGENT, "");
-        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TESTPARAMETERS, "id");
+        this.addTextField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TESTPARAMETERS, "");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_METHOD, METHOD_CHOICES, "Default");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "3");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RISK, RISK_CHOICES, "1");
