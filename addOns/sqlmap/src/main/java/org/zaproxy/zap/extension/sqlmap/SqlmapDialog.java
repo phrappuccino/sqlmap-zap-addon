@@ -38,6 +38,12 @@ public class SqlmapDialog extends StandardFieldsDialog {
     private static final String FIELD_SQLMAP_NAME_USERAGENT = "sqlmap.dialog.field.useragent";
     private static final String FIELD_SQLMAP_NAME_LEVEL = "sqlmap.dialog.field.level";
     private static final String FIELD_SQLMAP_NAME_RISK = "sqlmap.dialog.field.risk";
+    private static final String FIELD_SQLMAP_NAME_BLINDBOOL = "sqlmap.dialog.option.blindbool";
+    private static final String FIELD_SQLMAP_NAME_ERROR = "sqlmap.dialog.option.error";
+    private static final String FIELD_SQLMAP_NAME_UNIONQUERY = "sqlmap.dialog.option.unionquery";
+    private static final String FIELD_SQLMAP_NAME_STACKEDQUERY = "sqlmap.dialog.option.stackedquery";
+    private static final String FIELD_SQLMAP_NAME_TIMEBASEDBLIND = "sqlmap.dialog.option.timebasedblind";
+    private static final String FIELD_SQLMAP_NAME_INLINEQUERY = "sqlmap.dialog.option.inlinequery";
     private static final String FIELD_SQLMAP_NAME_PARAMPOLLUTION =
             "sqlmap.dialog.option.parampollution";
     private static final String FIELD_SQLMAP_NAME_LISTUSERS = "sqlmap.dialog.option.listusers";
@@ -151,6 +157,13 @@ public class SqlmapDialog extends StandardFieldsDialog {
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LEVEL, LEVEL_CHOICES, "3");
         this.addComboField(TAB_OPTIONS, FIELD_SQLMAP_NAME_RISK, RISK_CHOICES, "1");
 
+        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_BLINDBOOL, true);
+        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_ERROR, true);
+        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_UNIONQUERY, true);
+        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_STACKEDQUERY, true);
+        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_TIMEBASEDBLIND, true);
+        this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_INLINEQUERY, true);
+
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_PARAMPOLLUTION, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_LISTUSERS, false);
         this.addCheckBoxField(TAB_OPTIONS, FIELD_SQLMAP_NAME_CURRENTUSER, false);
@@ -197,6 +210,28 @@ public class SqlmapDialog extends StandardFieldsDialog {
         optionsObject.setTestParameter(this.getStringValue(FIELD_SQLMAP_NAME_TESTPARAMETERS));
         optionsObject.setLevel(this.getStringValue(FIELD_SQLMAP_NAME_LEVEL));
         optionsObject.setRisk(this.getStringValue(FIELD_SQLMAP_NAME_RISK));
+
+        String BEUSTQ = "";
+        if (this.getBoolValue(FIELD_SQLMAP_NAME_BLINDBOOL)){
+            BEUSTQ = BEUSTQ + "B";
+        }
+        if (this.getBoolValue(FIELD_SQLMAP_NAME_ERROR)){
+            BEUSTQ = BEUSTQ + "E";
+        }
+        if (this.getBoolValue(FIELD_SQLMAP_NAME_UNIONQUERY)){
+            BEUSTQ = BEUSTQ + "U";
+        }
+        if (this.getBoolValue(FIELD_SQLMAP_NAME_STACKEDQUERY)){
+            BEUSTQ = BEUSTQ + "S";
+        }
+        if (this.getBoolValue(FIELD_SQLMAP_NAME_TIMEBASEDBLIND)){
+            BEUSTQ = BEUSTQ + "T";
+        }
+        if (this.getBoolValue(FIELD_SQLMAP_NAME_INLINEQUERY)){
+            BEUSTQ = BEUSTQ + "Q";
+        }
+        optionsObject.setTechnique(BEUSTQ);
+
         optionsObject.setHpp(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_PARAMPOLLUTION)));
         optionsObject.setGetUsers(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_LISTUSERS)));
         optionsObject.setGetCurrentUser(String.valueOf(this.getBoolValue(FIELD_SQLMAP_NAME_CURRENTUSER)));
@@ -227,6 +262,11 @@ public class SqlmapDialog extends StandardFieldsDialog {
         return null;
     }
 
+    @Override
+    public String getSaveButtonText() {
+        return Constant.messages.getString("sqlmap.dialog.button.start");
+    }
+
     private void reset(boolean refreshUi) {
         if (refreshUi) {
             init();
@@ -238,7 +278,7 @@ public class SqlmapDialog extends StandardFieldsDialog {
     public JButton[] getExtraButtons() {
         if (extraButtons == null) {
             JButton startButton =
-                    new JButton(Constant.messages.getString("sqlmap.dialog.button.start"));
+                    new JButton(Constant.messages.getString("sqlmap.dialog.button.reset"));
             startButton.addActionListener(e -> reset(true));
 
             extraButtons = new JButton[] {startButton};

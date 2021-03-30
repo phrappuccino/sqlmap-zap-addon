@@ -41,8 +41,15 @@ public class JsonObjectResponse {
     private String getBanner = "true";
     private String data = null;
     private String textOnly = "";
+    private String technique = "BEUSTQ";
 
+    public String getTechnique() {
+        return technique;
+    }
 
+    public void setTechnique(String technique) {
+        this.technique = technique;
+    }
 
     public String getAuthType() {
         return authType;
