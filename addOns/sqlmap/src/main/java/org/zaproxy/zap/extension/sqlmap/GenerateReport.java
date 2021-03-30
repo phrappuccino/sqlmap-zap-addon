@@ -44,91 +44,94 @@ public class GenerateReport {
             JsonElement dataOuterArray = dataArray.get(i);
             JsonElement typeFromData = dataOuterArray.getAsJsonObject().get("type");
             JsonElement valueElement = dataOuterArray.getAsJsonObject().get("value");
-            if (typeFromData.toString().equals("0")){
-                View.getSingleton().getOutputPanel().append("type is: " + typeFromData.toString() + "\n");
-                setVulndetails("<ul><li>URL: " + valueElement.getAsJsonObject().get("url").toString() + "</li><li>Parameter: " + valueElement.getAsJsonObject().get("query").toString() + "</li></ul>");
-            }
-            else if (typeFromData.toString().equals("1")){
+            switch (typeFromData.toString()) {
+                case "0":
+                    View.getSingleton().getOutputPanel().append("type is: " + typeFromData.toString() + "\n");
+                    setVulndetails("<ul><li>URL: " + valueElement.getAsJsonObject().get("url").toString() + "</li><li>Parameter: " + valueElement.getAsJsonObject().get("query").toString() + "</li></ul>");
+                    break;
+                case "1": {
 //                View.getSingleton().getOutputPanel().append("type is: " + typeFromData.toString() + "\n");
-                JsonArray valueArray = valueElement.getAsJsonArray();
-                for (int j = 0; j < valueArray.size(); j++){
-                    View.getSingleton().getOutputPanel().append("value array size is: " + valueArray.size() + "\n");
-                    JsonElement valueOuterArray = valueArray.get(j);
-                    JsonElement dbtype = valueOuterArray.getAsJsonObject().get("dbms");
-                    View.getSingleton().getOutputPanel().append("db type is: "+dbtype.toString()+"\n");
-                    if (getDbtype().length() == 0){
-                        setDbtype(dbtype.toString());
-                    }
-                    else if (!getDbtype().equals(dbtype.toString())){
-                        setDbtype(getDbtype() + ", or " + dbtype.toString());
-                    }
-                    View.getSingleton().getOutputPanel().append("getDbtype after get: "+getDbtype()+"\n");
-                    JsonElement innerData = valueOuterArray.getAsJsonObject().get("data");
-                    View.getSingleton().getOutputPanel().append("size is " + innerData.getAsJsonObject().size() + "\n");
+                    JsonArray valueArray = valueElement.getAsJsonArray();
+                    for (int j = 0; j < valueArray.size(); j++) {
+                        View.getSingleton().getOutputPanel().append("value array size is: " + valueArray.size() + "\n");
+                        JsonElement valueOuterArray = valueArray.get(j);
+                        JsonElement dbtype = valueOuterArray.getAsJsonObject().get("dbms");
+                        View.getSingleton().getOutputPanel().append("db type is: " + dbtype.toString() + "\n");
+                        if (getDbtype().length() == 0) {
+                            setDbtype(dbtype.toString());
+                        } else if (!getDbtype().equals(dbtype.toString())) {
+                            setDbtype(getDbtype() + ", or " + dbtype.toString());
+                        }
+                        View.getSingleton().getOutputPanel().append("getDbtype after get: " + getDbtype() + "\n");
+                        JsonElement innerData = valueOuterArray.getAsJsonObject().get("data");
+                        View.getSingleton().getOutputPanel().append("size is " + innerData.getAsJsonObject().size() + "\n");
 
-                    for (int k = 0; k < 10; k++){
-                        boolean test = innerData.getAsJsonObject().has(String.valueOf(k));
-                        if (test){
-                            JsonElement innerDataEnum = innerData.getAsJsonObject().get(String.valueOf(k));
-                            JsonElement innerPayload = innerDataEnum.getAsJsonObject().get("payload");
-                            setPayloads(getPayloads() + "<li>" + innerPayload.toString() + "</li>");
+                        for (int k = 0; k < 10; k++) {
+                            boolean test = innerData.getAsJsonObject().has(String.valueOf(k));
+                            if (test) {
+                                JsonElement innerDataEnum = innerData.getAsJsonObject().get(String.valueOf(k));
+                                JsonElement innerPayload = innerDataEnum.getAsJsonObject().get("payload");
+                                setPayloads(getPayloads() + "<li>" + innerPayload.toString() + "</li>");
+                            }
+                        }
+                        setPayloads("<ul>" + getPayloads() + "</ul><BR>");
+                        View.getSingleton().getOutputPanel().append("payloads are: " + getPayloads());
+                    }
+                    break;
+                }
+                case "3":
+                    if (!valueElement.getAsString().equals("")) {
+                        setBanner(valueElement.getAsString() + "<BR>");
+                    }
+//                View.getSingleton().getOutputPanel().append("banner is: " + getBanner());
+                    break;
+                case "4":
+                    if (!valueElement.getAsString().equals("")) {
+                        setCurrentUser("Current User: " + valueElement.getAsString() + "<BR>");
+                    }
+//                View.getSingleton().getOutputPanel().append("current user is: " + getCurrentUser());
+                    break;
+                case "5":
+                    if (!valueElement.getAsString().equals("")) {
+                        setCurrentDB("Current Database: " + valueElement.getAsString() + "<BR>");
+                    }
+                    View.getSingleton().getOutputPanel().append("current db is: " + getCurrentDB());
+                    break;
+                case "6":
+                    if (!valueElement.getAsString().equals("")) {
+                        setHostname("Hostname: " + valueElement.getAsString() + "(empty if enumeration failed)<BR>");
+                    }
+                    View.getSingleton().getOutputPanel().append("current hostname is: " + getHostname());
+                    break;
+                case "7":
+                    if (!valueElement.getAsString().equals("")) {
+                        if (valueElement.getAsString().equals("true")) {
+                            setIsdba("Is DBA: Yes<BR>");
+                        } else {
+                            setIsdba("Is DBA: No<BR>");
                         }
                     }
-                    setPayloads("<ul>"+getPayloads()+"</ul><BR>");
-                    View.getSingleton().getOutputPanel().append("payloads are: " + getPayloads());
-                }
-            }
-            else if (typeFromData.toString().equals("3")){
-                if (!valueElement.getAsString().equals("")) {
-                    setBanner(valueElement.getAsString() + "<BR>");
-                }
-//                View.getSingleton().getOutputPanel().append("banner is: " + getBanner());
-            }
-            else if (typeFromData.toString().equals("4")){
-                if (!valueElement.getAsString().equals("")) {
-                    setCurrentUser("Current User: " + valueElement.getAsString() + "<BR>");
-                }
-//                View.getSingleton().getOutputPanel().append("current user is: " + getCurrentUser());
-            }
-            else if (typeFromData.toString().equals("5")){
-                if (!valueElement.getAsString().equals("")) {
-                    setCurrentDB("Current Database: " + valueElement.getAsString() + "<BR>");
-                }
-                View.getSingleton().getOutputPanel().append("current db is: " + getCurrentDB());
-            }
-            else if (typeFromData.toString().equals("6")){
-                if (!valueElement.getAsString().equals("")) {
-                    setHostname("Hostname: " + valueElement.getAsString() + "(empty if enumeration failed)<BR>");
-                }
-                View.getSingleton().getOutputPanel().append("current hostname is: " + getHostname());
-            }
-            else if (typeFromData.toString().equals("7")){
-                if (!valueElement.getAsString().equals("")) {
-                    if (valueElement.getAsString().equals("true")) {
-                        setIsdba("Is DBA: Yes<BR>");
-                    } else {
-                        setIsdba("Is DBA: No<BR>");
+                    break;
+                case "8":
+                    if (!valueElement.getAsString().equals("")) {
+                        JsonArray valueArray = valueElement.getAsJsonArray();
+                        for (int l = 0; l < valueArray.size(); l++) {
+                            JsonElement temp = valueArray.get(l);
+                            setListUsers(getListUsers() + "<li>" + temp.toString() + "</li>");
+                        }
+                        setListUsers("Users:<ul>" + getListUsers() + "</ul><BR>");
                     }
-                }
-            }
-            else if (typeFromData.toString().equals("8")){
-                if (!valueElement.getAsString().equals("")) {
+                    break;
+                case "12": {
                     JsonArray valueArray = valueElement.getAsJsonArray();
-                    for (int l = 0; l < valueArray.size(); l++) {
-                        JsonElement temp = valueArray.get(l);
-                        setListUsers(getListUsers() + "<li>" + temp.toString() + "</li>");
+                    for (int m = 0; m < valueArray.size(); m++) {
+                        JsonElement temp = valueArray.get(m);
+                        View.getSingleton().getOutputPanel().append("databases are: " + temp.toString() + "\n");
+                        setListDBS(getListDBS() + "<li>" + temp.toString() + "</li>");
                     }
-                    setListUsers("Users:<ul>" + getListUsers() + "</ul><BR>");
+                    setListDBS("Databases:<ul>" + getListDBS() + "</ul><BR>");
+                    break;
                 }
-            }
-            else if (typeFromData.toString().equals("12")){
-                JsonArray valueArray = valueElement.getAsJsonArray();
-                for (int m = 0; m < valueArray.size(); m++){
-                    JsonElement temp = valueArray.get(m);
-                    View.getSingleton().getOutputPanel().append("databases are: " + temp.toString() + "\n");
-                    setListDBS(getListDBS() + "<li>" + temp.toString() + "</li>");
-                }
-                setListDBS("Databases:<ul>" + getListDBS() + "</ul><BR>");
             }
         }
         String reportAsString =             "<html><head><title>SQLMap Scan - " + getTaskID() + "</title></head><body>";

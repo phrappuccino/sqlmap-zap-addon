@@ -35,32 +35,53 @@ import org.parosproxy.paros.Constant;
 
 public class CommunicationToAPI {
     JsonObjectResponse optionsObject;
+    private int http_resp = 0;
+
+    public int getHttp_resp() {
+        return http_resp;
+    }
+
+    public void setHttp_resp(int http_resp) {
+        this.http_resp = http_resp;
+    }
 
     public CommunicationToAPI(JsonObjectResponse optionsObject) {
         this.optionsObject = optionsObject;
     }
 
     public void startScanAPI(String urlPort) {
+        setHttp_resp(0);
         String taskIDfromcreate = createTask("GET", "http://" + urlPort);
-        setOptionsOnAPI("POST", "http://" + urlPort, taskIDfromcreate);
-        startScanOnAPI("POST", "http://" + urlPort, taskIDfromcreate);
-        try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException e) {e.printStackTrace();}
-        while (true){
-            String statusFromF = getStatusFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
-            int i = 0;
-            i++;
-            if (i > 20){
-                break;
+        if(getHttp_resp() == 200) {
+            setOptionsOnAPI("POST", "http://" + urlPort, taskIDfromcreate);
+            startScanOnAPI("POST", "http://" + urlPort, taskIDfromcreate);
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            if (statusFromF.equals("terminated")){
-                View.getSingleton()
-                        .getOutputPanel()
-                        .append("getting data after scan" + "\n");
-                getDataFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
-                break;
+            while (true) {
+                String statusFromF = getStatusFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
+                int i = 0;
+                i++;
+                if (i > 20) {
+                    break;
+                }
+                if (statusFromF.equals("terminated")) {
+                    View.getSingleton()
+                            .getOutputPanel()
+                            .append("getting data after scan" + "\n");
+                    getDataFromAPI("GET", "http://" + urlPort, taskIDfromcreate);
+                    break;
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException e) {e.printStackTrace();}
         }
+        View.getSingleton().getOutputPanel().append("API could not be reached!\n");
     }
 
     public String createTask(String method, String URL) {
@@ -110,6 +131,7 @@ public class CommunicationToAPI {
         }
         // View.getSingleton().getOutputPanel().append("GET Response Code :: " + responseCode);
         if (responseCode == HttpURLConnection.HTTP_OK) {
+            setHttp_resp(responseCode);
             BufferedReader in = null;
             try {
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
